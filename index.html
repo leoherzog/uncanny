@@ -426,6 +426,7 @@
           cardHeader.classList = idea['Status'].toLowerCase().replaceAll(' ', '');
           let statusIcon = document.createElement('figure');
           statusIcon.dataset.tooltip = idea['Status'];
+          statusIcon.dataset.placement = 'right';
           statusIcon.classList.add('statusIcon');
           switch (idea['Status']) {
             case 'New':
