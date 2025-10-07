@@ -303,7 +303,7 @@
             <option>Status</option>
             <option>New</option>
           </select>
-          <button id="refresh" class="secondary" aria-label="Refresh the list of ideas">Refresh</button>
+          <button id="refresh" class="secondary" aria-label="Refresh the list of ideas" disabled>Refresh</button>
         </nav>
 
       </nav>
@@ -332,7 +332,6 @@
         document.getElementById('complete').addEventListener('change', sortAndFilterIdeas);
         document.getElementById('notplanned').addEventListener('change', sortAndFilterIdeas);
         google.script.run.withSuccessHandler(populateEmail).withFailureHandler(failureToFindEmail).getUser();
-        refresh();
       });
 
       function openSubmitFormDialog() {
@@ -359,6 +358,7 @@
         document.getElementById('email').value = email;
         document.getElementById('submitIdeaButton').disabled = false;
         notie.alert({"text": "Welcome, " + email + "!", "type": "success"});
+        refresh();
       }
 
       function failureToFindEmail(error) {
