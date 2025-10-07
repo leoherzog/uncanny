@@ -23,7 +23,7 @@ function getUser() {
 
 function refreshCache_() {
   let sheet = SpreadsheetApp.openById(properties.getProperty('sheetId'));
-  ideas = sheet.getDataRange().getValues();
+  let ideas = sheet.getDataRange().getValues();
   ideas = JSON.stringify(ideas);
   cache.put('ideas', ideas, 60);
   return ideas;
@@ -53,36 +53,58 @@ function addIdea(title, description, submittor, status = 'New') {
 
 function toggleVote(id, email) {
 
-  const sheet = SpreadsheetApp.openById(properties.getProperty('sheetId')).getSheetByName('Ideas');
-  const ideas = sheet.getDataRange().getValues();
+  const lock = LockService.getScriptLock();
 
-  const rowIndex = ideas.findIndex(row => row[ideas[0].indexOf('ID')] === id);
-  const idea = ideas[rowIndex];
-  
-  if (rowIndex === -1) throw new Error('Idea with id ' + id + ' not found');
-  
-  let votes = [];
-  if (idea[ideas[0].indexOf('Voters')]) {
-    votes = JSON.parse(idea[ideas[0].indexOf('Voters')]);
-    votes = votes.filter(x => !!x);
-  }
-  
-  const voteIndex = votes.indexOf(email);
-  let action = '';
-  if (voteIndex === -1) { // not in voters array yet
-    votes.push(email);
-    action = 'added';
-  } else {
-    votes.splice(voteIndex, 1);
-    action = 'removed';
-  }
-  
-  sheet.getRange(Number(rowIndex) + 1, Number(ideas[0].indexOf('Voters') + 1)).setValue(JSON.stringify(votes));
-  
-  refreshCache_();
-  
-  return {"id": id, "title": idea[ideas[0].indexOf('Title')], "action": action, "newCount": votes.length};
+  try {
+    // wait up to 10 seconds to acquire the lock
+    if (!lock.tryLock(10000)) {
+      throw new Error('System is busy. Please try again in a moment.');
+    }
 
+    const sheet = SpreadsheetApp.openById(properties.getProperty('sheetId')).getSheetByName('Ideas');
+    const ideas = sheet.getDataRange().getValues();
+
+    const rowIndex = ideas.findIndex(row => row[ideas[0].indexOf('ID')] === id);
+
+    // check if idea exists before accessing it
+    if (rowIndex === -1) throw new Error('Idea with id ' + id + ' not found');
+
+    const idea = ideas[rowIndex];
+
+    let votes = [];
+    const votersData = idea[ideas[0].indexOf('Voters')];
+    if (votersData) {
+      try {
+        votes = JSON.parse(votersData);
+        if (!Array.isArray(votes)) votes = [];
+        votes = votes.filter(x => !!x);
+      } catch (e) {
+        votes = [];
+      }
+    }
+
+    const voteIndex = votes.indexOf(email);
+    let action = '';
+    if (voteIndex === -1) { // not in voters array yet
+      votes.push(email);
+      action = 'added';
+    } else {
+      votes.splice(voteIndex, 1);
+      action = 'removed';
+    }
+
+    sheet.getRange(Number(rowIndex) + 1, Number(ideas[0].indexOf('Voters') + 1)).setValue(JSON.stringify(votes));
+
+    SpreadsheetApp.flush();
+
+    refreshCache_();
+
+    return {"id": id, "title": idea[ideas[0].indexOf('Title')], "action": action, "newCount": votes.length};
+
+  } finally {
+    // always release the lock, even if an error occurred
+    lock.releaseLock();
+  }
 }
 
 function test() {
