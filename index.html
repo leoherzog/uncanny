@@ -3,6 +3,7 @@
   <head>
     <base target="_top">
     <meta charset="utf-8">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
     <script async src="https://cdn.jsdelivr.net/npm/notie@4/dist/notie.min.js"></script>
     <script async src="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7/js/all.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css" />
@@ -76,6 +77,7 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
+        font-weight: 700;
       }
 
       .upvote {
@@ -133,12 +135,17 @@
         }
 
         .complete {
+          background-color: var(--pico-color-green-50);
+          --pico-border-color: var(--pico-color-green-50);
+          accent-color: var(--pico-color-green-50);
+        }
+        .complete:focus {
+          --pico-form-element-focus-color: var(--pico-color-green-50);
+        }
+        .complete:is([type=checkbox]) {
           background-color: var(--pico-color-green-100);
           --pico-border-color: var(--pico-color-green-100);
           accent-color: var(--pico-color-green-100);
-        }
-        .complete:focus {
-          --pico-form-element-focus-color: var(--pico-color-green-100);
         }
 
         .notplanned {
