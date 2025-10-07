@@ -266,7 +266,7 @@
           <p>Let us know what ideas you want to see next!</p>
         </hgroup>
         <aside>
-          <button id="openSubmitFormDialogButton">Submit Your Idea</button>
+          <button id="openSubmitFormDialogButton" disabled aria-busy="true">Submit Your Idea</button>
         </aside>
       </nav>
     </header>
@@ -356,6 +356,8 @@
       function populateEmail(email) {
         console.log(email);
         document.getElementById('email').value = email;
+        document.getElementById('openSubmitFormDialogButton').disabled = false;
+        document.getElementById('openSubmitFormDialogButton').setAttribute('aria-busy', false);
         document.getElementById('submitIdeaButton').disabled = false;
         notie.alert({"text": "Welcome, " + email + "!", "type": "success"});
         refresh();
@@ -363,6 +365,7 @@
 
       function failureToFindEmail(error) {
         console.error(JSON.stringify(error));
+        document.getElementById('openSubmitFormDialogButton').setAttribute('aria-busy', false);
         // document.getElementById('authUrl').href = 'https://accounts.google.com/AccountChooser?hd=example.com&continue=' + encodeURIComponent('https://sites.google.com/example.com/feedback');
         document.getElementById('authErrorDialog').showModal();
       }
@@ -474,7 +477,7 @@
         }
         let card = document.getElementById(result.id);
         card.dataset.votes = result.newCount;
-        notie.alert({"text": "Vote " + result.action + " on \"" + result.title + "\"", "type": "success"});
+        notie.alert({"text": "Vote " + result.action + " on &ldquo;" + result.title + "&rdquo;", "type": "success"});
       }
 
       function failedVote(error, button) {
