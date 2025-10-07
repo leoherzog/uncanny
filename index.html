@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <base target="_top">
+    <meta charset="utf-8">
+    <script async src="https://cdn.jsdelivr.net/npm/notie@4/dist/notie.min.js"></script>
+    <script async src="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7/js/all.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.colors.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notie@4/dist/notie.min.css" />
+    <style>
+      .notie-container {
+        font-family: var(--pico-font-family-sans-serif);
+        font-size: var(--pico-font-size);
+        box-shadow: var(--pico-card-box-shadow);
+      }
+      .notie-background-success {
+        background-color: var(--pico-color-jade-500);
+      }
+      .notie-background-warning {
+        background-color: var(--pico-color-amber-600);
+      }
+      .notie-background-error {
+        background-color: var(--pico-color-red-600);
+      }
+      .notie-background-info {
+        background-color: var(--pico-primary-background);
+      }
+      .notie-background-neutral {
+        background-color: var(--pico-secondary-background);
+      }
+
+      #header {
+        align-items: center;
+      }
+
+      #headings {
+        margin-bottom: 0;
+      }
+
+      #lightdark {
+        cursor: pointer;
+      }
+
+      #loading {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 20vh;
+      }
+
+      #loading svg {
+        overflow: visible; /* thanks, fontawesome. wtf. */
+      }
+
+      #filters {
+        flex-direction: column;
+        align-items: end;
+        margin-bottom: var(--pico-block-spacing-vertical);
+      }
+
+      #refresh {
+        max-width: 180px;
+      }
+
+      #ideas {
+        grid-template-rows: masonry;
+        margin-bottom: 5rem;
+      }
+
+      article > header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .upvote {
+        padding: 1.5em var(--pico-form-element-spacing-horizontal) var(--pico-form-element-spacing-vertical);
+        margin: 0 0 0 var(--pico-form-element-spacing-horizontal);
+        background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><path fill="white" d="M342.6 81.4C330.1 68.9 309.8 68.9 297.3 81.4L137.3 241.4C124.8 253.9 124.8 274.2 137.3 286.7C149.8 299.2 170.1 299.2 182.6 286.7L288 181.3L288 552C288 569.7 302.3 584 320 584C337.7 584 352 569.7 352 552L352 181.3L457.4 286.7C469.9 299.2 490.2 299.2 502.7 286.7C515.2 274.2 515.2 253.9 502.7 241.4L342.7 81.4z"/></svg>');
+        background-repeat: no-repeat;
+        background-position: center 0.2em;
+        background-size: 1em;
+      }
+
+      button.upvote.voted {
+        --pico-background-color: var(--pico-color-jade-500) !important;
+        --pico-border-color: var(--pico-color-jade-600) !important;
+      }
+
+      button.upvote.voted:hover,
+      button.upvote.voted:active {
+        --pico-background-color: var(--pico-color-jade-400) !important;
+        --pico-border-color: var(--pico-color-jade-500) !important;
+      }
+
+      [data-theme="light"],
+      :root:not([data-theme="dark"]) {
+
+        #lightdark {
+          color: var(--pico-color-amber-200);
+        }
+        
+        .new {
+          background-color: var(--pico-color-amber-200);
+          --pico-border-color: var(--pico-color-amber-200);
+          accent-color: var(--pico-color-amber-200);
+        }
+        .new:focus {
+          --pico-form-element-focus-color: var(--pico-color-amber-100);
+        }
+
+        .planned {
+          background-color: var(--pico-color-blue-200);
+          --pico-border-color: var(--pico-color-blue-200);
+          accent-color: var(--pico-color-blue-200);
+        }
+        .planned:focus {
+          --pico-form-element-focus-color: var(--pico-color-blue-100);
+        }
+
+        .inprogress {
+          background-color: var(--pico-color-purple-200);
+          --pico-border-color: var(--pico-color-purple-200);
+          accent-color: var(--pico-color-purple-200);
+        }
+        .inprogress:focus {
+          --pico-form-element-focus-color: var(--pico-color-purple-100);
+        }
+
+        .complete {
+          background-color: var(--pico-color-green-200);
+          --pico-border-color: var(--pico-color-green-200);
+          accent-color: var(--pico-color-green-200);
+        }
+        .complete:focus {
+          --pico-form-element-focus-color: var(--pico-color-green-100);
+        }
+
+        .notplanned {
+          background-color: var(--pico-color-red-200);
+          --pico-border-color: var(--pico-color-red-200);
+          accent-color: var(--pico-color-red-200);
+        }
+        .notplanned:focus {
+          --pico-form-element-focus-color: var(--pico-color-red-100);
+        }
+
+      }
+
+      [data-theme="dark"],
+      :root:not([data-theme="light"]) {
+
+        #lightdark {
+          color: var(--pico-color-pumpkin-300);
+        }
+        
+        .new {
+          background-color: var(--pico-color-amber-700);
+          --pico-border-color: var(--pico-color-amber-700);
+          accent-color: var(--pico-color-amber-700);
+        }
+        .new:focus {
+          --pico-form-element-focus-color: var(--pico-color-amber-800);
+        }
+
+        .planned {
+          background-color: var(--pico-color-blue-700);
+          --pico-border-color: var(--pico-color-blue-700);
+          accent-color: var(--pico-color-blue-700);
+        }
+        .planned:focus {
+          --pico-form-element-focus-color: var(--pico-color-blue-800);
+        }
+
+        .inprogress {
+          background-color: var(--pico-color-purple-700);
+          --pico-border-color: var(--pico-color-purple-700);
+          accent-color: var(--pico-color-purple-700);
+        }
+        .inprogress:focus {
+          --pico-form-element-focus-color: var(--pico-color-purple-800);
+        }
+
+        .complete {
+          background-color: var(--pico-color-green-700);
+          --pico-border-color: var(--pico-color-green-700);
+          accent-color: var(--pico-color-green-700);
+        }
+        .complete:focus {
+          --pico-form-element-focus-color: var(--pico-color-green-800);
+        }
+
+        .notplanned {
+          background-color: var(--pico-color-red-700);
+          --pico-border-color: var(--pico-color-red-700);
+          accent-color: var(--pico-color-red-700);
+        }
+        .notplanned:focus {
+          --pico-form-element-focus-color: var(--pico-color-red-800);
+        }
+
+      }
+
+      @media (min-width: 768px) {
+        #filterAndSort {
+          max-width: 360px;
+        }
+        #filters {
+          flex-direction: row;
+        }
+        #ideas {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      @media (min-width: 1280px) {
+        #ideas {
+          grid-template-columns: repeat(3, 1fr);
+        }
+      }
+    </style>
+
+  </head>
+  <body class="container">
+
+    <dialog id="authErrorDialog">
+      <article>
+        You're not currently signed in with a Google Account
+        <footer>
+          <a id="authUrl" role="button">Log in</a>
+        </footer>
+      </article>
+    </dialog>
+
+    <dialog id="submitFormDialog">
+      <article>
+        <header>
+          Tell us your idea!
+          <button id="closeSubmitFormDialogButton" aria-label="Close" rel="prev"></button>
+        </header>
+        <form id="newidea">
+          <fieldset>
+            <label>
+              Email<sup>*</sup>
+              <input id="email" name="email" type="email" placeholder="Loading..." readonly required />
+            </label>
+            <label>
+              Title<sup>*</sup>
+              <input name="title" placeholder="Short Description of Your Idea" required />
+            </label>
+            <label>
+              Description
+              <textarea name="description" placeholder="More context, if applicable" rows="4"></textarea>
+            </label>
+          </fieldset>
+          <input id="submitIdeaButton" type="submit" value="Submit Idea" disabled />
+        </form>
+      </article>
+    </dialog>
+
+    <header>
+      <nav id="header">
+        <hgroup id="headings">
+          <h1><span id="lightdark" data-tooltip="Toggle Light/Dark Mode" data-placement="bottom"><span class="fa-regular fa-lightbulb fa-width-auto">💡</span></span> Feedback</h1>
+          <p>Let us know what ideas you want to see next!</p>
+        </hgroup>
+        <aside>
+          <button id="openSubmitFormDialogButton">Submit Your Idea</button>
+        </aside>
+      </nav>
+    </header>
+
+    <main>
+
+      <nav id="filters">
+        <fieldset>
+          <label htmlFor="new">
+            <input type="checkbox" id="new" name="new" class="new" checked />
+            New
+          </label>
+          <label htmlFor="planned">
+            <input type="checkbox" id="planned" name="planned" class="planned" checked />
+            Planned
+          </label>
+          <label htmlFor="inprogress">
+            <input type="checkbox" id="inprogress" name="inprogress" class="inprogress" checked />
+            In Progress
+          </label>
+          <label htmlFor="complete">  
+            <input type="checkbox" id="complete" name="complete" class="complete" />
+            Complete
+          </label>
+          <label htmlFor="notplanned">  
+            <input type="checkbox" id="notplanned" name="notplanned" class="notplanned" />
+            Not Planned
+          </label>
+        </fieldset>
+
+        <nav id="filterAndSort" role="group">
+          <select id="sort" name="sort" aria-label="Sort the list of ideas">
+            <option selected>Votes</option>
+            <option>Status</option>
+            <option>New</option>
+          </select>
+          <button id="refresh" class="secondary" aria-label="Refresh the list of ideas">Refresh</button>
+        </nav>
+
+      </nav>
+
+      <figure id="loading">
+        <span class="fa-solid fa-comments fa-3x fa-beat-fade"></span>
+      </figure>
+
+      <section id="ideas" class="grid"></section>
+
+    </main>
+
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        initLightDarkToggle();
+        document.getElementById('openSubmitFormDialogButton').addEventListener('click', openSubmitFormDialog);
+        document.getElementById('closeSubmitFormDialogButton').addEventListener('click', closeSubmitFormDialog);
+        document.getElementById('submitFormDialog').addEventListener('click', closeSubmitFormDialog);
+        document.getElementById('newidea').addEventListener('submit', submitNewIdea);
+        document.getElementById('sort').addEventListener('change', sortAndFilterIdeas);
+        document.getElementById('refresh').addEventListener('click', refresh);
+        document.getElementById('new').addEventListener('change', sortAndFilterIdeas);
+        document.getElementById('planned').addEventListener('change', sortAndFilterIdeas);
+        document.getElementById('inprogress').addEventListener('change', sortAndFilterIdeas);
+        document.getElementById('complete').addEventListener('change', sortAndFilterIdeas);
+        document.getElementById('notplanned').addEventListener('change', sortAndFilterIdeas);
+        google.script.run.withSuccessHandler(populateEmail).withFailureHandler(failureToFindEmail).getUser();
+        refresh();
+      });
+
+      function openSubmitFormDialog() {
+        document.getElementById('submitFormDialog').showModal();
+      }
+
+      function closeSubmitFormDialog(e) {
+        const dialog = document.getElementById('submitFormDialog');
+        const closeButton = document.getElementById('closeSubmitFormDialogButton');
+        if (e.target === dialog || e.target === closeButton) {
+          dialog.close();
+        }
+      }
+
+      function initLightDarkToggle() {
+        document.documentElement.dataset.theme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        document.getElementById('lightdark').addEventListener('click', function(e) {
+          document.documentElement.dataset.theme = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+        });
+      }
+      
+      function populateEmail(email) {
+        console.log(email);
+        document.getElementById('email').value = email;
+        document.getElementById('submitIdeaButton').disabled = false;
+        notie.alert({"text": "Welcome, " + email + "!", "type": "success"});
+      }
+
+      function failureToFindEmail(error) {
+        console.error(JSON.stringify(error));
+        // document.getElementById('authUrl').href = 'https://accounts.google.com/AccountChooser?hd=example.com&continue=' + encodeURIComponent('https://sites.google.com/example.com/feedback');
+        document.getElementById('authErrorDialog').showModal();
+      }
+
+      function refresh() {
+        document.getElementById('refresh').disabled = true;
+        document.getElementById('refresh').setAttribute('aria-busy', 'true');
+        google.script.run.withSuccessHandler(populateIdeas).getIdeas();
+      }
+
+      function populateIdeas(ideas) {
+        ideas = JSON.parse(ideas);
+        const currentUserEmail = document.getElementById('email').value; // Get current user email
+        let header = ideas.shift();
+        ideas = ideas.map(function(row) {
+          return Object.fromEntries(header.map(function(key, i) { return [key, row[i]]; }));
+        });
+        console.log(ideas);
+        document.getElementById('loading').style.display = 'none';
+        let ideasElement = document.getElementById('ideas');
+        ideasElement.innerHTML = '';
+        for (let idea of ideas) {
+          let card = document.createElement('article');
+          card.id = idea['ID'];
+          card.dataset.date = idea['Date Submitted'];
+          card.dataset.status = idea['Status'];
+          const voters = JSON.parse(idea['Voters']);
+          card.dataset.votes = voters.length;
+          let cardHeader = document.createElement('header');
+          cardHeader.classList = idea['Status'].toLowerCase().replaceAll(' ', '');
+          let titleElement = document.createElement('span');
+          titleElement.innerText = idea['Title'];
+          cardHeader.appendChild(titleElement);
+          let upvotesElement = document.createElement('button');
+          upvotesElement.classList.add('secondary', 'upvote');
+          if (idea['Status'] === 'Complete' || idea['Status'] === 'Not Planned') upvotesElement.disabled = true;
+          if (currentUserEmail) {
+            if (voters.includes(currentUserEmail)) {
+              upvotesElement.classList.add('voted');
+              upvotesElement.dataset.tooltip = 'Remove Upvote';
+            } else {
+              upvotesElement.dataset.tooltip = 'Upvote';
+            }
+          } 
+          upvotesElement.dataset.id = idea['ID'];
+          upvotesElement.innerHTML = voters.length;
+          upvotesElement.addEventListener('click', processVote);
+          cardHeader.appendChild(upvotesElement);
+          card.appendChild(cardHeader);
+          let descriptionElement = document.createElement('p');
+          descriptionElement.innerText = idea['Description'];
+          card.appendChild(descriptionElement);
+          ideasElement.appendChild(card);
+        }
+        document.getElementById('refresh').disabled = false;
+        document.getElementById('refresh').setAttribute('aria-busy', 'false');
+        sortAndFilterIdeas();
+      }
+
+      function sortAndFilterIdeas() {
+        let sort = document.getElementById('sort').value;
+        let ideasElement = document.getElementById('ideas');
+        let ideaElements = Array.from(ideasElement.children);
+        switch (sort) {
+          case 'New':
+            ideaElements.sort(function(a, b) {
+              return b.getAttribute('data-date').localeCompare(a.getAttribute('data-date'));
+            });
+            break;
+          case 'Status':
+            ideaElements.sort(function(a, b) {
+              return a.getAttribute('data-status').localeCompare(b.getAttribute('data-status'));
+            });
+            break;
+          case 'Votes':
+            ideaElements.sort(function(a, b) {
+              return (parseInt(b.getAttribute('data-votes')) || 0) - (parseInt(a.getAttribute('data-votes')) || 0);
+            });
+            break;
+        }
+        for (let i = 0; i < ideaElements.length; i++) {
+          let element = ideaElements[i];
+          let status = element.getAttribute('data-status').toLowerCase().replaceAll(' ', '');
+          element.style.display = document.getElementById(status).checked ? '' : 'none';
+          ideasElement.appendChild(element);
+        }
+      }
+
+      function processVote(e) {
+        let button = e.target;
+        let id = button.dataset.id;
+        button.disabled = true;
+        button.setAttribute('aria-busy', 'true');
+        google.script.run
+          .withSuccessHandler(function(result) { successfulVote(result, button); })
+          .withFailureHandler(function(error) { failedVote(error, button); })
+          .toggleVote(id, document.getElementById('email').value);
+      }
+
+      function successfulVote(result, button) {
+        console.log('Vote ' + result.action + ' for idea ' + result.id);
+        button.innerHTML = result.newCount;
+        button.disabled = false;
+        button.setAttribute('aria-busy', 'false');
+        if (result.action === 'added') {
+          button.classList.add('voted');
+        } else {
+          button.classList.remove('voted');
+        }
+        let card = document.getElementById(result.id);
+        card.dataset.votes = result.newCount;
+        notie.alert({"text": "Vote " + result.action + " on \"" + result.title + "\"", "type": "success"});
+      }
+
+      function failedVote(error, button) {
+        console.error('Vote failed: ' + error);
+        button.disabled = false;
+        button.setAttribute('aria-busy', 'false');
+        notie.alert({"text": "Error processing vote. Please try again.", "type": "error"});
+      }
+
+      function submitNewIdea(e) {
+        e.preventDefault();
+        const fields = new FormData(e.target);
+        console.log('Submitting new idea...');
+        let submitIdeaButton = document.getElementById('submitIdeaButton');
+        submitIdeaButton.disabled = true;
+        submitIdeaButton.setAttribute('aria-busy', 'true');
+        google.script.run.withSuccessHandler(newIdeaSuccess).withFailureHandler(newIdeaFailure).addIdea(fields.get('title'), fields.get('description'), fields.get('email'));
+      }
+
+      function newIdeaSuccess() {
+        console.log('Success!');
+        document.getElementById('submitFormDialog').close();
+        document.getElementById('newidea').reset();
+        let submitIdeaButton = document.getElementById('submitIdeaButton');
+        submitIdeaButton.disabled = false;
+        submitIdeaButton.setAttribute('aria-busy', 'false');
+        google.script.run.withSuccessHandler(populateIdeas).getIdeas();
+        notie.alert({"text": "Thanks for submiting your new idea! We will review it and make it available for voting soon.", "type": "success"});
+      }
+
+      function newIdeaFailure(error) {
+        console.error(error);
+        notie.alert({"text": "Error submitting your idea. Please try again.", "type": "error"});
+      }
+    </script>
+  </body>
+</html>
