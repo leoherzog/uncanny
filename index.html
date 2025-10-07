@@ -69,8 +69,8 @@
       }
 
       #ideas {
-        display: block;
         column-gap: var(--pico-spacing);
+        column-count: 1;
         margin-bottom: 5rem;
       }
 
@@ -83,18 +83,18 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        font-weight: 700;
+        font-weight: 600;
+        position: relative;
       }
 
-      .statusIcon {
-        border-bottom: 0 !important;
-        position: absolute;
-        top: 2px;
-        left: 2px;
+      article > header > section {
+        display: flex;
+        flex-direction: column;
       }
 
-      .statusIcon > svg {
-        opacity: 0.3;
+      .status {
+        font-size: 60%;
+        width: fit-content;
       }
 
       .upvote {
@@ -132,6 +132,9 @@
         .new:focus {
           --pico-form-element-focus-color: var(--pico-color-amber-100);
         }
+        .new.status {
+          background-color: var(--pico-color-amber-200);
+        }
 
         .planned {
           background-color: var(--pico-color-blue-200);
@@ -141,6 +144,9 @@
         .planned:focus {
           --pico-form-element-focus-color: var(--pico-color-blue-100);
         }
+        .planned.status {
+          background-color: var(--pico-color-blue-300);
+        }
 
         .inprogress {
           background-color: var(--pico-color-purple-200);
@@ -149,6 +155,9 @@
         }
         .inprogress:focus {
           --pico-form-element-focus-color: var(--pico-color-purple-100);
+        }
+        .inprogress.status {
+          background-color: var(--pico-color-purple-300);
         }
 
         .complete {
@@ -164,6 +173,10 @@
           --pico-border-color: var(--pico-color-green-100);
           accent-color: var(--pico-color-green-100);
         }
+        .complete.status {
+          background-color: var(--pico-color-green-200);
+        }
+
 
         .notplanned {
           background-color: var(--pico-color-red-200);
@@ -172,6 +185,9 @@
         }
         .notplanned:focus {
           --pico-form-element-focus-color: var(--pico-color-red-100);
+        }
+        .notplanned.status {
+          background-color: var(--pico-color-red-300);
         }
 
       }
@@ -191,6 +207,9 @@
         .new:focus {
           --pico-form-element-focus-color: var(--pico-color-amber-800);
         }
+        .new.status {
+          background-color: var(--pico-color-amber-600);
+        }
 
         .planned {
           background-color: var(--pico-color-blue-700);
@@ -199,6 +218,9 @@
         }
         .planned:focus {
           --pico-form-element-focus-color: var(--pico-color-blue-800);
+        }
+        .planned.status {
+          background-color: var(--pico-color-blue-600);
         }
 
         .inprogress {
@@ -209,6 +231,9 @@
         .inprogress:focus {
           --pico-form-element-focus-color: var(--pico-color-purple-800);
         }
+        .inprogress.status {
+          background-color: var(--pico-color-purple-600);
+        }
 
         .complete {
           background-color: var(--pico-color-green-700);
@@ -218,6 +243,9 @@
         .complete:focus {
           --pico-form-element-focus-color: var(--pico-color-green-800);
         }
+        .complete.status {
+          background-color: var(--pico-color-green-600);
+        }
 
         .notplanned {
           background-color: var(--pico-color-red-700);
@@ -226,6 +254,9 @@
         }
         .notplanned:focus {
           --pico-form-element-focus-color: var(--pico-color-red-800);
+        }
+        .notplanned.status {
+          background-color: var(--pico-color-red-600);
         }
 
       }
@@ -406,7 +437,6 @@
 
       function populateIdeas(ideas) {
         ideas = JSON.parse(ideas);
-        const currentUserEmail = document.getElementById('email').value; // Get current user email
         let header = ideas.shift();
         ideas = ideas.map(function(row) {
           return Object.fromEntries(header.map(function(key, i) { return [key, row[i]]; }));
@@ -424,34 +454,19 @@
           card.dataset.votes = voters.length;
           let cardHeader = document.createElement('header');
           cardHeader.classList = idea['Status'].toLowerCase().replaceAll(' ', '');
-          let statusIcon = document.createElement('figure');
-          statusIcon.dataset.tooltip = idea['Status'];
-          statusIcon.dataset.placement = 'right';
-          statusIcon.classList.add('statusIcon');
-          switch (idea['Status']) {
-            case 'New':
-              statusIcon.innerHTML = '<span class="fa-regular fa-circle"></span>';
-              break;
-            case 'Planned':
-              statusIcon.innerHTML = '<span class="fa-regular fa-circle-dot"></span>';
-              break;
-            case 'In Progress':
-              statusIcon.innerHTML = '<span class="fa-solid fa-circle-half-stroke"></span>';
-              break;
-            case 'Complete':
-              statusIcon.innerHTML = '<span class="fa-solid fa-circle-check"></span>';
-              break;
-            case 'Not Planned':
-              statusIcon.innerHTML = '<span class="fa-solid fa-ban"></span>';
-              break;
-          }
-          cardHeader.appendChild(statusIcon);
+          let statusAndHeader = document.createElement('section');
+          let statusElement = document.createElement('mark');
+          statusElement.classList.add('status', idea['Status'].toLowerCase().replaceAll(' ', ''));
+          statusElement.innerHTML = idea['Status'];
+          statusAndHeader.appendChild(statusElement);
           let titleElement = document.createElement('span');
           titleElement.innerText = idea['Title'];
-          cardHeader.appendChild(titleElement);
+          statusAndHeader.appendChild(titleElement);
+          cardHeader.appendChild(statusAndHeader);
           let upvotesElement = document.createElement('button');
           upvotesElement.classList.add('secondary', 'upvote');
           if (idea['Status'] === 'Complete' || idea['Status'] === 'Not Planned') upvotesElement.disabled = true;
+          const currentUserEmail = document.getElementById('email').value;
           if (currentUserEmail) {
             if (voters.includes(currentUserEmail)) {
               upvotesElement.classList.add('voted');
