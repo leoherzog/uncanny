@@ -550,7 +550,9 @@
       function newIdeaSuccess() {
         console.log('Success!');
         document.getElementById('submitFormDialog').close();
+        let email = document.getElementById('email').value;
         document.getElementById('newidea').reset();
+        document.getElementById('email').value = email;
         let submitIdeaButton = document.getElementById('submitIdeaButton');
         submitIdeaButton.disabled = false;
         submitIdeaButton.setAttribute('aria-busy', 'false');
