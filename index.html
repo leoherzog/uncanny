@@ -69,8 +69,14 @@
       }
 
       #ideas {
-        grid-template-rows: masonry;
+        display: block;
+        column-gap: var(--pico-spacing);
         margin-bottom: 5rem;
+      }
+
+      #ideas > article {
+        break-inside: avoid;
+        margin-bottom: var(--pico-spacing);
       }
 
       article > header {
@@ -78,6 +84,17 @@
         justify-content: space-between;
         align-items: center;
         font-weight: 700;
+      }
+
+      .statusIcon {
+        border-bottom: 0 !important;
+        position: absolute;
+        top: 2px;
+        left: 2px;
+      }
+
+      .statusIcon > svg {
+        opacity: 0.3;
       }
 
       .upvote {
@@ -221,13 +238,13 @@
           flex-direction: row;
         }
         #ideas {
-          grid-template-columns: repeat(2, 1fr);
+          column-count: 2;
         }
       }
 
       @media (min-width: 1280px) {
         #ideas {
-          grid-template-columns: repeat(3, 1fr);
+          column-count: 3;
         }
       }
     </style>
@@ -407,6 +424,27 @@
           card.dataset.votes = voters.length;
           let cardHeader = document.createElement('header');
           cardHeader.classList = idea['Status'].toLowerCase().replaceAll(' ', '');
+          let statusIcon = document.createElement('figure');
+          statusIcon.dataset.tooltip = idea['Status'];
+          statusIcon.classList.add('statusIcon');
+          switch (idea['Status']) {
+            case 'New':
+              statusIcon.innerHTML = '<span class="fa-solid fa-certificate"></span>';
+              break;
+            case 'Planned':
+              statusIcon.innerHTML = '<span class="fa-regular fa-circle"></span>';
+              break;
+            case 'In Progress':
+              statusIcon.innerHTML = '<span class="fa-solid fa-circle-half-stroke"></span>';
+              break;
+            case 'Complete':
+              statusIcon.innerHTML = '<span class="fa-solid fa-circle-check"></span>';
+              break;
+            case 'Not Planned':
+              statusIcon.innerHTML = '<span class="fa-solid fa-ban"></span>';
+              break;
+          }
+          cardHeader.appendChild(statusIcon);
           let titleElement = document.createElement('span');
           titleElement.innerText = idea['Title'];
           cardHeader.appendChild(titleElement);
