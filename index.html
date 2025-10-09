@@ -69,22 +69,11 @@
       }
 
       #ideas {
-        column-gap: var(--pico-spacing);
-        column-count: 1;
         margin-bottom: 5rem;
       }
 
-      #ideas > article {
-        break-inside: avoid;
-        margin-bottom: var(--pico-spacing);
-      }
-
       article > header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
         font-weight: 600;
-        position: relative;
       }
 
       article > header > section {
@@ -99,7 +88,7 @@
 
       .upvote {
         padding: 1.5em var(--pico-form-element-spacing-horizontal) var(--pico-form-element-spacing-vertical);
-        margin: 0 0 0 var(--pico-form-element-spacing-horizontal);
+        margin: 0 var(--pico-form-element-spacing-horizontal) 0;
         background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><path fill="white" d="M342.6 81.4C330.1 68.9 309.8 68.9 297.3 81.4L137.3 241.4C124.8 253.9 124.8 274.2 137.3 286.7C149.8 299.2 170.1 299.2 182.6 286.7L288 181.3L288 552C288 569.7 302.3 584 320 584C337.7 584 352 569.7 352 552L352 181.3L457.4 286.7C469.9 299.2 490.2 299.2 502.7 286.7C515.2 274.2 515.2 253.9 502.7 241.4L342.7 81.4z"/></svg>');
         background-repeat: no-repeat;
         background-position: center 0.2em;
@@ -267,15 +256,6 @@
         }
         #filters {
           flex-direction: row;
-        }
-        #ideas {
-          column-count: 2;
-        }
-      }
-
-      @media (min-width: 1280px) {
-        #ideas {
-          column-count: 3;
         }
       }
     </style>
@@ -459,10 +439,6 @@
           statusElement.classList.add('status', idea['Status'].toLowerCase().replaceAll(' ', ''));
           statusElement.innerHTML = idea['Status'];
           statusAndHeader.appendChild(statusElement);
-          let titleElement = document.createElement('span');
-          titleElement.innerText = idea['Title'];
-          statusAndHeader.appendChild(titleElement);
-          cardHeader.appendChild(statusAndHeader);
           let upvotesElement = document.createElement('button');
           upvotesElement.classList.add('secondary', 'upvote');
           if (idea['Status'] === 'Complete' || idea['Status'] === 'Not Planned') upvotesElement.disabled = true;
@@ -479,6 +455,10 @@
           upvotesElement.innerHTML = voters.length;
           upvotesElement.addEventListener('click', processVote);
           cardHeader.appendChild(upvotesElement);
+          let titleElement = document.createElement('span');
+          titleElement.innerText = idea['Title'];
+          statusAndHeader.appendChild(titleElement);
+          cardHeader.appendChild(statusAndHeader);
           card.appendChild(cardHeader);
           let descriptionElement = document.createElement('p');
           descriptionElement.innerText = idea['Description'];
