@@ -149,12 +149,63 @@
         }
       }
       
+      /* Sidebar layout with CSS Grid */
+      main {
+        display: grid;
+        grid-template-areas:
+          "filters"
+          "content";
+      }
+
+      #filters {
+        grid-area: filters;
+      }
+
+      #loading,
+      #ideas {
+        grid-area: content;
+      }
+
       @media (min-width: 1280px) {
-        #ideas {
-          grid-template-columns: repeat(3, 1fr);
+        main {
+          grid-template-columns: 360px 1fr;
+          grid-template-areas: "filters content";
+          gap: var(--pico-spacing);
+          align-items: start;
         }
+
+        #filters {
+          position: sticky;
+          top: var(--pico-spacing);
+          flex-direction: column !important;
+          align-items: stretch !important;
+          padding-right: var(--pico-spacing);
+          border-right: 2px var(--pico-primary-border) solid;
+        }
+
+        #filters > fieldset,
+        #filters #viewOptions {
+          flex-direction: column;
+          align-items: stretch;
+        }
+
+        #filters fieldset[role="group"],
+        #filters #viewToggle {
+          width: 100%;
+        }
+
+        #ideas {
+          grid-template-columns: repeat(2, 1fr);
+        }
+
         main:has(#listViewButton[aria-current="true"]) #ideas {
           grid-template-columns: 1fr; /* Force single column when list view is active */
+        }
+      }
+
+      @media (min-width: 1536px) {
+        #ideas {
+          grid-template-columns: repeat(3, 1fr);
         }
       }
 
@@ -552,8 +603,17 @@
             });
             break;
           case 'Status':
+            const statusOrder = {
+              'New': 1,
+              'Planned': 2,
+              'In Progress': 3,
+              'Complete': 4,
+              'Not Planned': 5
+            };
             ideaElements.sort(function(a, b) {
-              return a.getAttribute('data-status').localeCompare(b.getAttribute('data-status'));
+              const statusA = statusOrder[a.getAttribute('data-status')] || 999;
+              const statusB = statusOrder[b.getAttribute('data-status')] || 999;
+              return statusA - statusB;
             });
             break;
           case 'Votes':
