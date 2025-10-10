@@ -72,16 +72,20 @@
         margin-bottom: 5rem;
         align-items: start;
         grid-template-rows: masonry; /* hopefully someday! */
-        gap: var(--pico-block-spacing-vertical);
       }
 
       article > header {
         font-weight: 600;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: var(--pico-spacing);
       }
 
       article > header > section {
         display: flex;
         flex-direction: column;
+        margin: 0;
       }
 
       .status {
