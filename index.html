@@ -70,6 +70,9 @@
 
       #ideas {
         margin-bottom: 5rem;
+        align-items: start;
+        grid-template-rows: masonry; /* hopefully someday! */
+        gap: var(--pico-block-spacing-vertical);
       }
 
       article > header {
@@ -103,6 +106,24 @@
       button.upvote.voted:active {
         --pico-background-color: var(--pico-color-jade-400) !important;
         --pico-border-color: var(--pico-color-jade-500) !important;
+      }
+
+      @media (min-width: 768px) {
+        #filterAndSort {
+          max-width: 360px;
+        }
+        #filters {
+          flex-direction: row;
+        }
+        #ideas {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      @media (min-width: 1024px) {
+        #ideas {
+          grid-template-columns: repeat(3, 1fr);
+        }
       }
 
       [data-theme="light"],
@@ -248,15 +269,6 @@
         }
 
       }
-
-      @media (min-width: 768px) {
-        #filterAndSort {
-          max-width: 360px;
-        }
-        #filters {
-          flex-direction: row;
-        }
-      }
     </style>
 
   </head>
@@ -350,7 +362,7 @@
         <span class="fa-solid fa-comments fa-3x fa-beat-fade"></span>
       </figure>
 
-      <section id="ideas"></section>
+      <section id="ideas" class="grid"></section>
 
     </main>
 
