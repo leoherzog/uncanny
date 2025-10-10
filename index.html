@@ -68,6 +68,20 @@
         max-width: 180px;
       }
 
+      #viewToggle {
+        display: none; /* Hidden on mobile/tablet where it's already single column */
+      }
+
+      #viewToggle button[aria-current="true"] {
+        --pico-background-color: var(--pico-primary-background);
+        --pico-border-color: var(--pico-primary-border);
+        --pico-color: var(--pico-primary-inverse);
+      }
+
+      #sort {
+        width: 100%;
+      }
+
       #ideas {
         margin-bottom: 5rem;
         align-items: start;
@@ -113,20 +127,34 @@
       }
 
       @media (min-width: 768px) {
-        #filterAndSort {
-          max-width: 360px;
+        #viewOptions {
+          flex-direction: column;
+          align-items: end;
         }
         #filters {
           flex-direction: row;
         }
+        #viewToggle {
+          display: flex; /* Show toggle on larger screens */
+          width: fit-content;
+        }
+        #sort {
+          width: fit-content;
+        }
         #ideas {
           grid-template-columns: repeat(2, 1fr);
         }
+        main:has(#listViewButton[aria-current="true"]) #ideas {
+          grid-template-columns: 1fr; /* Force single column when list view is active */
+        }
       }
-
-      @media (min-width: 1024px) {
+      
+      @media (min-width: 1280px) {
         #ideas {
           grid-template-columns: repeat(3, 1fr);
+        }
+        main:has(#listViewButton[aria-current="true"]) #ideas {
+          grid-template-columns: 1fr; /* Force single column when list view is active */
         }
       }
 
@@ -351,13 +379,19 @@
           </label>
         </fieldset>
 
-        <nav id="filterAndSort" role="group">
-          <select id="sort" name="sort" aria-label="Sort the list of ideas">
-            <option selected>Votes</option>
-            <option>Status</option>
-            <option>New</option>
-          </select>
-          <button id="refresh" class="secondary" aria-label="Refresh the list of ideas" disabled>Refresh</button>
+        <nav id="viewOptions">
+          <fieldset id="viewToggle" role="group">
+            <button id="gridViewButton" aria-current="true"><span class="fa-solid fa-grip" aria-label="Multiple Columns"></span></button>
+            <button id="listViewButton"><span class="fa-solid fa-bars" aria-label="One Column"></span></button>
+          </fieldset>
+          <fieldset role="group">
+            <select id="sort" name="sort" aria-label="Sort the list of ideas">
+              <option selected>Votes</option>
+              <option>Status</option>
+              <option>New</option>
+            </select>
+            <button id="refresh" class="secondary" aria-label="Refresh the list of ideas" disabled>Refresh</button>
+          </fieldset>
         </nav>
 
       </nav>
@@ -374,6 +408,7 @@
     <script>
       document.addEventListener('DOMContentLoaded', function() {
         initLightDarkToggle();
+        initViewToggle();
         document.getElementById('openSubmitFormDialogButton').addEventListener('click', openSubmitFormDialog);
         document.getElementById('closeSubmitFormDialogButton').addEventListener('click', closeSubmitFormDialog);
         document.getElementById('submitFormDialog').addEventListener('click', closeSubmitFormDialog);
@@ -385,6 +420,8 @@
         document.getElementById('inprogress').addEventListener('change', sortAndFilterIdeas);
         document.getElementById('complete').addEventListener('change', sortAndFilterIdeas);
         document.getElementById('notplanned').addEventListener('change', sortAndFilterIdeas);
+        document.getElementById('gridViewButton').addEventListener('click', switchToGridView);
+        document.getElementById('listViewButton').addEventListener('click', switchToListView);
         google.script.run.withSuccessHandler(populateEmail).withFailureHandler(failureToFindEmail).getUser();
       });
 
@@ -406,7 +443,26 @@
           document.documentElement.dataset.theme = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
         });
       }
-      
+
+      function initViewToggle() {
+        if (localStorage.getItem('viewMode') === 'list') {
+          document.getElementById('gridViewButton').removeAttribute('aria-current');
+          document.getElementById('listViewButton').setAttribute('aria-current', 'true');
+        }
+      }
+
+      function switchToGridView() {
+        document.getElementById('gridViewButton').setAttribute('aria-current', 'true');
+        document.getElementById('listViewButton').removeAttribute('aria-current');
+        localStorage.setItem('viewMode', 'grid');
+      }
+
+      function switchToListView() {
+        document.getElementById('listViewButton').setAttribute('aria-current', 'true');
+        document.getElementById('gridViewButton').removeAttribute('aria-current');
+        localStorage.setItem('viewMode', 'list');
+      }
+
       function populateEmail(email) {
         console.log(email);
         document.getElementById('email').value = email;
