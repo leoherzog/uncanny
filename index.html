@@ -180,7 +180,15 @@
           flex-direction: column !important;
           align-items: stretch !important;
           padding-right: var(--pico-spacing);
-          border-right: 2px var(--pico-primary-border) solid;
+          border: 0 solid;
+          border-right-width: 2px;
+          border-image: linear-gradient(
+            to bottom,
+            transparent 0%,
+            var(--pico-primary-border) 30%,
+            var(--pico-primary-border) 70%,
+            transparent 100%
+          ) 1;
         }
 
         #filters > fieldset,
@@ -603,13 +611,12 @@
             });
             break;
           case 'Status':
-            const statusOrder = {
-              'New': 1,
-              'Planned': 2,
-              'In Progress': 3,
-              'Complete': 4,
-              'Not Planned': 5
-            };
+            const statusOrder = {};
+            const checkboxes = document.querySelectorAll('#filters > fieldset input[type="checkbox"]');
+            checkboxes.forEach(function(checkbox, index) {
+              const label = checkbox.parentElement.textContent.trim();
+              statusOrder[label] = index + 1;
+            });
             ideaElements.sort(function(a, b) {
               const statusA = statusOrder[a.getAttribute('data-status')] || 999;
               const statusB = statusOrder[b.getAttribute('data-status')] || 999;
