@@ -7,8 +7,8 @@ function setIdeasSheetID() {
 
 function doGet() {
   return HtmlService.createHtmlOutputFromFile('index')
-    .setTitle('Hope App Feedback')
-    .setFaviconUrl('https://hope.edu/favicon.ico')
+    .setTitle('Uncanny Feedback')
+    .setFaviconUrl('https://favicon.show/letter/U?color=3C71F7')
     .addMetaTag('viewport', 'width=device-width, initial-scale=1')
     .addMetaTag('apple-mobile-web-app-capable', 'yes')
     .addMetaTag('mobile-web-app-capable', 'yes')
