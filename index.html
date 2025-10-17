@@ -108,27 +108,16 @@
 
       .upvote {
         padding: 1.5em var(--pico-form-element-spacing-horizontal) var(--pico-form-element-spacing-vertical);
-        background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><path fill="white" d="M342.6 81.4C330.1 68.9 309.8 68.9 297.3 81.4L137.3 241.4C124.8 253.9 124.8 274.2 137.3 286.7C149.8 299.2 170.1 299.2 182.6 286.7L288 181.3L288 552C288 569.7 302.3 584 320 584C337.7 584 352 569.7 352 552L352 181.3L457.4 286.7C469.9 299.2 490.2 299.2 502.7 286.7C515.2 274.2 515.2 253.9 502.7 241.4L342.7 81.4z"/></svg>');
         background-repeat: no-repeat;
         background-position: center 0.2em;
         background-size: 1em;
-      }
-
-      button.upvote.voted {
-        --pico-background-color: var(--pico-color-jade-500) !important;
-        --pico-border-color: var(--pico-color-jade-600) !important;
-      }
-
-      button.upvote.voted:hover,
-      button.upvote.voted:active {
-        --pico-background-color: var(--pico-color-jade-400) !important;
-        --pico-border-color: var(--pico-color-jade-500) !important;
       }
 
       @media (min-width: 768px) {
         #viewOptions {
           flex-direction: column;
           align-items: end;
+          width: fit-content;
         }
         #filters {
           flex-direction: row;
@@ -136,10 +125,10 @@
         }
         #viewToggle {
           display: flex; /* Show toggle on larger screens */
-          width: fit-content;
+          width: 100%;
         }
         #sort {
-          width: fit-content;
+          width: 100%;
         }
         #ideas {
           grid-template-columns: repeat(2, 1fr);
@@ -197,8 +186,7 @@
           align-items: stretch;
         }
 
-        #filters fieldset[role="group"],
-        #filters #viewToggle {
+        #viewOptions {
           width: 100%;
         }
 
@@ -277,7 +265,6 @@
           background-color: var(--pico-color-green-100);
         }
 
-
         .notplanned {
           background-color: var(--pico-color-red-200);
           --pico-border-color: var(--pico-color-red-200);
@@ -288,6 +275,31 @@
         }
         .notplanned.status {
           background-color: var(--pico-color-red-300);
+        }
+
+        .upvote {
+          --pico-background-color: var(--pico-color-grey-100) !important;
+          --pico-border-color: var(--pico-color-grey-200) !important;
+          color: var(--pico-contrast) !important;
+          background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><path fill="black" d="M342.6 81.4C330.1 68.9 309.8 68.9 297.3 81.4L137.3 241.4C124.8 253.9 124.8 274.2 137.3 286.7C149.8 299.2 170.1 299.2 182.6 286.7L288 181.3L288 552C288 569.7 302.3 584 320 584C337.7 584 352 569.7 352 552L352 181.3L457.4 286.7C469.9 299.2 490.2 299.2 502.7 286.7C515.2 274.2 515.2 253.9 502.7 241.4L342.7 81.4z"/></svg>');
+        }
+        .upvote:hover,
+        .upvote:active {
+          --pico-background-color: var(--pico-color-grey-50) !important;
+          --pico-border-color: var(--pico-color-grey-100) !important;
+          color: var(--pico-contrast) !important;
+        }
+
+        button.upvote.voted {
+          --pico-background-color: var(--pico-color-jade-100) !important;
+          --pico-border-color: var(--pico-color-jade-200) !important;
+          color: var(--pico-contrast) !important;
+        }
+        button.upvote.voted:hover,
+        button.upvote.voted:active {
+          --pico-background-color: var(--pico-color-jade-50) !important;
+          --pico-border-color: var(--pico-color-jade-100) !important;
+          color: var(--pico-contrast) !important;
         }
 
       }
@@ -357,6 +369,31 @@
         }
         .notplanned.status {
           background-color: var(--pico-color-red-600);
+        }
+
+        .upvote {
+          --pico-background-color: var(--pico-color-grey-500) !important;
+          --pico-border-color: var(--pico-color-grey-600) !important;
+          color: var(--pico-contrast) !important;
+          background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><path fill="white" d="M342.6 81.4C330.1 68.9 309.8 68.9 297.3 81.4L137.3 241.4C124.8 253.9 124.8 274.2 137.3 286.7C149.8 299.2 170.1 299.2 182.6 286.7L288 181.3L288 552C288 569.7 302.3 584 320 584C337.7 584 352 569.7 352 552L352 181.3L457.4 286.7C469.9 299.2 490.2 299.2 502.7 286.7C515.2 274.2 515.2 253.9 502.7 241.4L342.7 81.4z"/></svg>');
+        }
+        .upvote:hover,
+        .upvote:active {
+          --pico-background-color: var(--pico-color-grey-400) !important;
+          --pico-border-color: var(--pico-color-grey-500) !important;
+          color: var(--pico-contrast) !important;
+        }
+
+        button.upvote.voted {
+          --pico-background-color: var(--pico-color-jade-500) !important;
+          --pico-border-color: var(--pico-color-jade-600) !important;
+          color: var(--pico-contrast) !important;
+        }
+        button.upvote.voted:hover,
+        button.upvote.voted:active {
+          --pico-background-color: var(--pico-color-jade-400) !important;
+          --pico-border-color: var(--pico-color-jade-500) !important;
+          color: var(--pico-contrast) !important;
         }
 
       }
@@ -443,14 +480,11 @@
             <button id="gridViewButton" aria-current="true" data-tooltip="Column View"><span class="fa-solid fa-grip" aria-label="Column View"></span></button>
             <button id="listViewButton" data-tooltip="List View"><span class="fa-solid fa-bars" aria-label="List View"></span></button>
           </fieldset>
-          <fieldset role="group">
-            <select id="sort" name="sort" aria-label="Sort the list of ideas">
-              <option selected>Votes</option>
-              <option>Status</option>
-              <option>New</option>
-            </select>
-            <button id="refresh" class="secondary" aria-label="Refresh the list of ideas" disabled>Refresh</button>
-          </fieldset>
+          <select id="sort" name="sort" aria-label="Sort the list of ideas">
+            <option value="votes" selected>Sort by Votes</option>
+            <option value="sort">Sort by Status</option>
+              <option value="new">Sort by Newest</option>
+          </select>
         </nav>
 
       </nav>
@@ -473,7 +507,6 @@
         document.getElementById('submitFormDialog').addEventListener('click', closeSubmitFormDialog);
         document.getElementById('newidea').addEventListener('submit', submitNewIdea);
         document.getElementById('sort').addEventListener('change', sortAndFilterIdeas);
-        document.getElementById('refresh').addEventListener('click', refresh);
         document.getElementById('new').addEventListener('change', sortAndFilterIdeas);
         document.getElementById('planned').addEventListener('change', sortAndFilterIdeas);
         document.getElementById('inprogress').addEventListener('change', sortAndFilterIdeas);
@@ -540,8 +573,6 @@
       }
 
       function refresh() {
-        document.getElementById('refresh').disabled = true;
-        document.getElementById('refresh').setAttribute('aria-busy', 'true');
         google.script.run.withSuccessHandler(populateIdeas).getIdeas();
       }
 
@@ -570,7 +601,7 @@
           statusElement.innerHTML = idea['Status'];
           statusAndHeader.appendChild(statusElement);
           let upvotesElement = document.createElement('button');
-          upvotesElement.classList.add('secondary', 'upvote');
+          upvotesElement.classList.add('upvote');
           if (idea['Status'] === 'Complete' || idea['Status'] === 'Not Planned') upvotesElement.disabled = true;
           const currentUserEmail = document.getElementById('email').value;
           if (currentUserEmail) {
@@ -595,8 +626,6 @@
           card.appendChild(descriptionElement);
           ideasElement.appendChild(card);
         }
-        document.getElementById('refresh').disabled = false;
-        document.getElementById('refresh').setAttribute('aria-busy', 'false');
         sortAndFilterIdeas();
       }
 
@@ -605,12 +634,12 @@
         let ideasElement = document.getElementById('ideas');
         let ideaElements = Array.from(ideasElement.children);
         switch (sort) {
-          case 'New':
+          case 'new':
             ideaElements.sort(function(a, b) {
               return b.getAttribute('data-date').localeCompare(a.getAttribute('data-date'));
             });
             break;
-          case 'Status':
+          case 'status':
             const statusOrder = {};
             const checkboxes = document.querySelectorAll('#filters > fieldset input[type="checkbox"]');
             checkboxes.forEach(function(checkbox, index) {
@@ -623,7 +652,7 @@
               return statusA - statusB;
             });
             break;
-          case 'Votes':
+          case 'votes':
             ideaElements.sort(function(a, b) {
               return (parseInt(b.getAttribute('data-votes')) || 0) - (parseInt(a.getAttribute('data-votes')) || 0);
             });
