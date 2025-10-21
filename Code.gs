@@ -22,7 +22,7 @@ function getUser() {
 }
 
 function refreshCache_() {
-  let sheet = SpreadsheetApp.openById(properties.getProperty('sheetId'));
+  let sheet = SpreadsheetApp.openById(properties.getProperty('sheetId')).getSheetByName('Ideas');
   let ideas = sheet.getDataRange().getValues();
   ideas = JSON.stringify(ideas);
   cache.put('ideas', ideas, 60);
