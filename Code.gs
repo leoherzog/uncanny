@@ -30,11 +30,27 @@ function refreshCache_() {
 }
 
 function getIdeas(forceCacheRefresh = false) {
+  let user = getUser();
   let ideas = cache.get('ideas');
   if (!ideas || forceCacheRefresh) ideas = refreshCache_();
   console.log(ideas);
   ideas = JSON.parse(ideas);
   ideas = ideas.filter(x => !!x[ideas[0].indexOf('Visible')]);
+  ideas = ideas.map((row, index) => {
+    if (index === 0) return row; // keep header row as-is
+    let votersArray;
+    try {
+      votersArray = JSON.parse(row[ideas[0].indexOf('Voters')]); // parse current voters
+    } catch {}
+    if (!Array.isArray(votersArray)) votersArray = [];
+    try {
+      row[ideas[0].indexOf('Voters')] = votersArray.length; // obfuscate voters to count only
+    } catch (e) {
+      row[ideas[0].indexOf('Voters')] = 0;
+    }
+    row[ideas[0].indexOf('Submitted By')] = votersArray.includes(user); // obfuscuate submittor to boolean of current vote status
+    return row;
+  });
   ideas = JSON.stringify(ideas);
   return ideas;
 }
