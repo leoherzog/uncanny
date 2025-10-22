@@ -8,7 +8,7 @@ function setIdeasSheetID() {
 function doGet() {
   return HtmlService.createHtmlOutputFromFile('index')
     .setTitle('Uncanny Feedback')
-    .setFaviconUrl('https://favicon.show/letter/U?color=3C71F7')
+    .setFaviconUrl('https://favicon.show/letter/U?color=3C71F7/favicon.ico')
     .addMetaTag('viewport', 'width=device-width, initial-scale=1')
     .addMetaTag('apple-mobile-web-app-capable', 'yes')
     .addMetaTag('mobile-web-app-capable', 'yes')
