@@ -591,6 +591,7 @@
           card.id = idea['ID'];
           card.dataset.date = idea['Date Submitted'];
           card.dataset.status = idea['Status'];
+          card.dataset.votes = idea['Voters'];
           let cardHeader = document.createElement('header');
           cardHeader.classList = idea['Status'].toLowerCase().replaceAll(' ', '');
           let statusAndHeader = document.createElement('section');
