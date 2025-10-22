@@ -46,7 +46,7 @@ function getIdea(id) {
 }
 
 function addIdea(title, description, submittor, status = 'New') {
-  SpreadsheetApp.openById(properties.getProperty('sheetId')).appendRow([false, status, Utilities.getUuid(), title, description, new Date(), submittor, "[\"" + submittor + "\"]"]);
+  SpreadsheetApp.openById(properties.getProperty('sheetId')).getSheetByName('Ideas').appendRow([false, status, Utilities.getUuid(), title, description, new Date(), submittor, "[\"" + submittor + "\"]"]);
   refreshCache_();
   return true;
 }
@@ -103,7 +103,7 @@ function toggleVote(id, email) {
 
   } finally {
     // always release the lock, even if an error occurred
-    lock.releaseLock();
+    if (lock.hasLock) lock.releaseLock();
   }
 }
 
