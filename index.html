@@ -686,6 +686,9 @@
         } else {
           button.classList.remove('voted');
         }
+        const tooltipText = result.action === 'added' ? 'Remove Upvote' : 'Upvote';
+        button.dataset.tooltip = tooltipText;
+        button.setAttribute('aria-label', tooltipText);
         let card = document.getElementById(result.id);
         card.dataset.votes = result.newCount;
         notie.alert({"text": "Vote " + result.action + " on &ldquo;" + result.title + "&rdquo;", "type": "success"});
